@@ -4,7 +4,7 @@ var router = express.Router();
 var mysql = require('mysql');
 var db = require('../config/db');
 var pool = mysql.createPool(db.mysql);
-const utils = '../utils/responseJson';
+const utils = require('../utils/responseJson');
 
 /* GET home page. */
 router.post('/login/login', function(req, res, next) {
@@ -12,7 +12,8 @@ router.post('/login/login', function(req, res, next) {
         if(err) {
             throw err;
         }
-        utils.responseJONS(res, raws);
+        console.log(raws[0])
+        utils.responseJONS(res, raws[0]);
     })
 });
 

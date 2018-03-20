@@ -9,7 +9,16 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
-
+app.use("*", function (req, res, next) { //跨域的解决方法
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    if (req.method === 'OPTIONS') {
+        res.send(200)
+    } else {
+        next()
+    }
+});
 // view engine setup
 var ejs = require('ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -35,13 +44,14 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function logError(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
   res.status(err.status || 500);
+  console.log(err.stack)
   res.render('error');
 });
 

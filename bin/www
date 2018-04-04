@@ -27,6 +27,8 @@ var server = http.createServer(app);
 
 
 server.listen(port);
+
+console.log('Express ready!')
 server.on('error', onError);
 server.on('listening', onListening);
 

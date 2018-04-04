@@ -13,7 +13,7 @@ router.post('/login/login', function(req, res, next) {
         username:req.body.username,
         password:req.body.password
     }
-    const myToken = token.createToken(userData, 60)
+    const myToken = token.createToken(userData, 60*60*24)
     res.json({
         status: 1,
         token: myToken,
@@ -22,12 +22,7 @@ router.post('/login/login', function(req, res, next) {
 });
 
 router.post('/getUserInfo', function (req, res, next) {
-    if(req.method != 'OPTIONS') {
-        var mytoken = req.headers['x-token']
-        console.log('token',mytoken)
-        console.log(token.checkToken(mytoken))
-    }
-    res.send({roles:['admin']})
+    res.send({roles:['admin'],status: 1})
 })
 
 module.exports = router;

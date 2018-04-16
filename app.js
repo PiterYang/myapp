@@ -9,7 +9,10 @@ var parseurl = require('parseurl');
 var RedisStore = require('connect-redis')(session)
 var redis = require('redis');
 var index = require('./routes/index');
+var myConnection = require('express-myconnection');
 var users = require('./routes/users');
+var mysql = require('mysql')
+var db = require('./config/db');
 var app = express();
 app.use("*", function (req, res, next) { //跨域的解决方法
     res.header('Access-Control-Allow-Origin', '*');
@@ -58,6 +61,9 @@ app.use(session({
     cookie:{ maxAge: 1000*60*60*24}//失效时间
 
 }));
+console.log('db info',db)
+app.use(myConnection(mysql, db.mysql, 'single')); //作为中间件来使用
+
 app.use("*", function (req, res, next) {
     var token = require('./utils/token');
     var mytoken = ''
@@ -83,7 +89,6 @@ app.use("*", function (req, res, next) {
         //输出值到模板，res.locals，不前页面输出，app.locals是模板全局出输
         // res.locals.user=JSON.parse(token);
         // app.locals.user=JSON.parse(token);
-        console.log('checktoken', token.checkToken(mytoken))
         if(token.checkToken(mytoken)) { //如果token正确则返回数据
             next();
         } else {

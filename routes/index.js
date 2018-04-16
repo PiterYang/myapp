@@ -9,6 +9,12 @@ const utils = require('../utils/responseJson');
 const crypto = require('crypto');
 /* GET home page. */
 router.post('/login/login', function(req, res, next) {
+    pool.query('select * from admin_table', function (err, raws) {
+        if(err) {
+            throw err;
+        }
+        console.log(raws[0])
+    })
     const userData = {
         username:req.body.username,
         password:req.body.password

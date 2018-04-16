@@ -7,7 +7,6 @@ router.post('/login/login', function(req, res, next) {
         if(err) {
             throw err;
         }
-        console.log(raws[0])
         utils.responseJONS(res, raws[0]);
     })
 });

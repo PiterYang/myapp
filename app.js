@@ -15,7 +15,8 @@ var mysql = require('mysql')
 var db = require('./config/db');
 var app = express();
 app.use("*", function (req, res, next) { //跨域的解决方法
-    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Credentials','true' )
+    res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
     res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With,T-Token");
     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
     if (req.method === 'OPTIONS') {
@@ -36,7 +37,7 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+
 
 const client = redis.createClient({
     host: '127.0.0.1',
@@ -50,6 +51,9 @@ client.on("error", function (err) {
     console.log("Error " + err);
 
 });
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
 app.use(session({
     store: new RedisStore({
         host: '127.0.0.1',
@@ -58,7 +62,7 @@ app.use(session({
     resave: false,  //重新保存
     saveUninitialized: true, //
     secret: 'express admin',//通过设置的 secret 字符串，来计算 hash 值并放在 cookie 中，使产生的 signedCookie 防篡改。
-    cookie:{ maxAge: 1000*60*60*24}//失效时间
+    cookie:{ maxAge: 1000*60*60*24,secure: false}//失效时间
 
 }));
 console.log('db info',db)
@@ -73,6 +77,7 @@ app.use("*", function (req, res, next) {
     var pathname = req.originalUrl;
     //判断是否登录入
     if(!mytoken){
+        console.log('!token')
         //未登录清空token输出给模板值
         token = req.session.token = null;
         res.locals.user=null;
@@ -97,7 +102,7 @@ app.use("*", function (req, res, next) {
 
     }
 })
-app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.use('/', index);
 app.use('/users', users);

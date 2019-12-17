@@ -26,5 +26,8 @@
     "redis": "^2.8.0",
     "serve-favicon": "~2.4.5",
     "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "prettier": "^1.19.1"
   }
 }
